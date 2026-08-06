@@ -60,7 +60,7 @@ class RouteDecisionMatrix:
         tenant_allowed_regions: list[str] | None = None,
         override_weights: dict[str, float] | None = None,
     ) -> tuple[ModelProfile, list[ModelProfile]]:
-        """Filters candidate models by capacity, region, cost, and health, then scores and returns optimal model + fallback chain."""
+        """Filters candidate models by capacity, region, cost, and health."""
         active_models = self.registry.get_all_active_models()
 
         # Step 1: Filter models
@@ -94,10 +94,11 @@ class RouteDecisionMatrix:
             raise ValueError("No eligible models found matching context requirements and health status")
 
         # Determine weight parameters
-        w_c = override_weights.get("w_c", self.settings.weight_cost) if override_weights else self.settings.weight_cost
-        w_l = override_weights.get("w_l", self.settings.weight_latency) if override_weights else self.settings.weight_latency
-        w_h = override_weights.get("w_h", self.settings.weight_health) if override_weights else self.settings.weight_health
-        w_a = override_weights.get("w_a", self.settings.weight_affinity) if override_weights else self.settings.weight_affinity
+        s_set = self.settings
+        w_c = override_weights.get("w_c", s_set.weight_cost) if override_weights else s_set.weight_cost
+        w_l = override_weights.get("w_l", s_set.weight_latency) if override_weights else s_set.weight_latency
+        w_h = override_weights.get("w_h", s_set.weight_health) if override_weights else s_set.weight_health
+        w_a = override_weights.get("w_a", s_set.weight_affinity) if override_weights else s_set.weight_affinity
 
         max_cost = max(m.cost_per_1k_input_tokens for m in eligible) or 1.0
         max_latency = max(m.historical_p99_latency_ms for m in eligible) or 1.0
@@ -106,7 +107,8 @@ class RouteDecisionMatrix:
         scored: list[tuple[float, ModelProfile]] = []
         for m in eligible:
             circuit_health = 1.0 if circuit_statuses.get(m.model_id, True) else 0.0
-            affinity = 1.0 if tenant_allowed_regions and any(r in tenant_allowed_regions for r in m.supported_regions) else 0.5
+            has_affinity = tenant_allowed_regions and any(r in tenant_allowed_regions for r in m.supported_regions)
+            affinity = 1.0 if has_affinity else 0.5
             s = self.score_model(
                 m, max_cost, max_latency, circuit_health, affinity, w_c, w_l, w_h, w_a
             )

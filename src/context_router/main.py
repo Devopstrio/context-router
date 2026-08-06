@@ -1,12 +1,12 @@
 """Main Application Entrypoint for Enterprise Context Router Platform."""
 
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator
 
+import uvicorn
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
 
 from context_router.api.health import router as health_router
 from context_router.api.routes import router as api_router

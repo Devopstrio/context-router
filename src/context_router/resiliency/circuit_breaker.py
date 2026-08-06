@@ -1,10 +1,10 @@
 """Resiliency Controller & Circuit Breaker."""
 
 import time
-from enum import Enum
+from enum import StrEnum
 
 
-class BreakerState(str, Enum):
+class BreakerState(StrEnum):
     CLOSED = "CLOSED"  # Healthy
     OPEN = "OPEN"      # Tripped / Unhealthy
     HALF_OPEN = "HALF_OPEN"  # Testing recovery

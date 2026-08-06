@@ -1,7 +1,5 @@
 """Integration tests for context routing decision pipeline."""
 
-from context_router.config.model_registry import ModelRegistry
-from context_router.routing.matrix import RouteDecisionMatrix
 from context_router.security.jwt_auth import JWTAuthenticator
 from context_router.security.tenant_guard import TenantIsolationGuard
 from context_router.validation.schemas import RequestContext, RouteRequest

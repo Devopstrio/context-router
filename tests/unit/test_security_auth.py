@@ -1,7 +1,7 @@
 """Unit tests for Security, JWT Authentication, and Tenant Isolation Guard."""
 
 import pytest
-from context_router.security.jwt_auth import JWTAuthenticator
+
 from context_router.security.rbac_abac import RBACABACEngine
 from context_router.security.tenant_guard import SecurityBoundaryViolation, TenantIsolationGuard
 

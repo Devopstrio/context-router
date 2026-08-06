@@ -1,11 +1,11 @@
 """Request State Machine lifecycle tracker."""
 
 import time
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 
-class RequestState(str, Enum):
+class RequestState(StrEnum):
     RECEIVED = "RECEIVED"
     VALIDATED = "VALIDATED"
     AUTHENTICATED = "AUTHENTICATED"

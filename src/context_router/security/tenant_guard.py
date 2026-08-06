@@ -23,10 +23,11 @@ class TenantIsolationGuard:
             )
 
         if header_tenant_id != jwt_claims.tenant_id:
-            raise SecurityBoundaryViolation(
-                f"Tenant boundary violation: Header '{header_tenant_id}' does not match authenticated token claim '{jwt_claims.tenant_id}'",
-                code="ERR-4001",
+            msg = (
+                f"Tenant boundary violation: Header '{header_tenant_id}' "
+                f"does not match authenticated token claim '{jwt_claims.tenant_id}'"
             )
+            raise SecurityBoundaryViolation(msg, code="ERR-4001")
 
     def enforce_data_residency(
         self, tenant_claims: JWTClaims, target_regions: list[str]
@@ -38,7 +39,9 @@ class TenantIsolationGuard:
         allowed_set = set(tenant_claims.data_residency)
         for region in target_regions:
             if region not in allowed_set:
-                raise SecurityBoundaryViolation(
-                    f"Data residency policy violation: Target region '{region}' is not authorized for tenant '{tenant_claims.tenant_id}' (Allowed: {tenant_claims.data_residency})",
-                    code="ERR-4001",
+                msg = (
+                    f"Data residency policy violation: Target region '{region}' "
+                    f"is not authorized for tenant '{tenant_claims.tenant_id}' "
+                    f"(Allowed: {tenant_claims.data_residency})"
                 )
+                raise SecurityBoundaryViolation(msg, code="ERR-4001")

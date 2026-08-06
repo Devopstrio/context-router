@@ -1,6 +1,7 @@
 """Prometheus Metrics Declarations and Telemetry Collection."""
 
-from prometheus_client import Counter, Gauge, Histogram, REGISTRY
+from prometheus_client import REGISTRY, Counter, Gauge, Histogram
+
 
 # Avoid duplicate registration when reloading
 def get_or_create_counter(name: str, documentation: str, labelnames: list[str]) -> Counter:

@@ -55,7 +55,7 @@ def build_problem_details(
         "detail": detail,
         "instance": instance,
         "code": code,
-        "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "timestamp": datetime.datetime.now(datetime.UTC).isoformat(),
     }
 
 
