@@ -41,7 +41,7 @@ def _get_authenticated_claims(request: Request, authorization: str | None) -> JW
                 detail="ERR-2001: Missing or invalid Authorization Bearer header",
             )
         token = authorization.split(" ", 1)[1]
-        authenticator = request.app.state.authenticator
+        authenticator = getattr(request.app.state, "authenticator")
         try:
             claims = authenticator.decode_and_validate(token)
         except Exception as e:
@@ -61,12 +61,12 @@ def _process_single_route(
     state_machine = RequestStateMachine(route_id)
 
     # 1. Tenant boundary check
-    tenant_guard: TenantIsolationGuard = req.app.state.tenant_guard
+    tenant_guard: TenantIsolationGuard = getattr(req.app.state, "tenant_guard")
     tenant_guard.verify_tenant_boundary(x_tenant_id, claims)
     state_machine.transition_to(RequestState.AUTHENTICATED)
 
     # 2. RBAC & ABAC Auth check
-    rbac_engine: RBACABACEngine = req.app.state.rbac_engine
+    rbac_engine: RBACABACEngine = getattr(req.app.state, "rbac_engine")
     rbac_engine.authorize_route_request(
         claims,
         {"data_classification": request_obj.request_context.data_classification},
@@ -74,39 +74,39 @@ def _process_single_route(
 
     # 3. L1/L2 Cache lookup
     cache_key = f"route:{x_tenant_id}:{request_obj.session_id}:{hash(request_obj.request_context.user_query)}"
-    l1_cache = req.app.state.l1_cache
+    l1_cache = getattr(req.app.state, "l1_cache")
     cached_res = l1_cache.get(cache_key)
     if cached_res:
         state_machine.transition_to(RequestState.ROUTE_DISPATCHED, {"cache": "hit"})
         return cast(RouteResponse, cached_res)
 
     # 4. Fetch Memory State Pointer
-    memory_client = req.app.state.memory_client
+    memory_client = getattr(req.app.state, "memory_client")
     memory_state = memory_client.get_session_state_pointer(x_tenant_id, request_obj.session_id)
     state_machine.transition_to(RequestState.SESSION_RESOLVED)
 
     # 5. Evaluate Token Budget
-    budget_client = req.app.state.budget_client
+    budget_client = getattr(req.app.state, "budget_client")
     total_tokens = budget_client.estimate_payload_tokens(
         request_obj.request_context.user_query, memory_state.estimated_history_tokens
     )
 
     # 6. Evaluate Policy Constraints
-    policy_client = req.app.state.policy_client
+    policy_client = getattr(req.app.state, "policy_client")
     policy_res = policy_client.evaluate_tenant_policy(
         x_tenant_id, request_obj.request_context.data_classification
     )
     tenant_guard.enforce_data_residency(claims, policy_res.restricted_regions)
 
     # 7. Check Header Rules & Overrides
-    rule_engine: PriorityRuleEngine = req.app.state.rule_engine
+    rule_engine: PriorityRuleEngine = getattr(req.app.state, "rule_engine")
     override_weights, force_model_id = rule_engine.resolve_header_overrides(headers)
 
-    matrix: RouteDecisionMatrix = req.app.state.route_matrix
-    resiliency = req.app.state.resiliency
+    matrix: RouteDecisionMatrix = getattr(req.app.state, "route_matrix")
+    resiliency = getattr(req.app.state, "resiliency")
 
     # Get circuit statuses for all models
-    model_registry = req.app.state.model_registry
+    model_registry: ModelRegistry = getattr(req.app.state, "model_registry")
     circuit_statuses = {
         m.model_id: resiliency.is_healthy(m.model_id)
         for m in model_registry.get_all_active_models()
@@ -145,7 +145,7 @@ def _process_single_route(
             )
 
     # 9. Dispatch to context-assembler
-    assembler_client = req.app.state.assembler_client
+    assembler_client = getattr(req.app.state, "assembler_client")
     assembler_client.dispatch_assembly_job(
         route_id=route_id,
         tenant_id=x_tenant_id,
@@ -160,7 +160,7 @@ def _process_single_route(
     elapsed_ms = round((time.time() - start_time) * 1000, 2)
     estimated_cost = round((total_tokens / 1000.0) * best_model.cost_per_1k_input_tokens, 6)
 
-    audit_client = req.app.state.audit_client
+    audit_client = getattr(req.app.state, "audit_client")
     audit_client.publish_route_event(
         route_id=route_id,
         tenant_id=x_tenant_id,
@@ -263,13 +263,13 @@ def register_model_profile(
 ) -> ModelProfile:
     """Registers or updates model target profiles in active scoring matrix (Admin)."""
     claims = _get_authenticated_claims(req, authorization)
-    rbac: RBACABACEngine = req.app.state.rbac_engine
+    rbac: RBACABACEngine = getattr(req.app.state, "rbac_engine")
     try:
         rbac.authorize_admin_request(claims)
     except SecurityBoundaryViolation as e:
         raise HTTPException(status_code=403, detail=f"ERR-4001: {e.message}") from e
 
-    registry: ModelRegistry = req.app.state.model_registry
+    registry: ModelRegistry = getattr(req.app.state, "model_registry")
     registry.register_model(profile)
     return profile
 
@@ -277,5 +277,5 @@ def register_model_profile(
 @router.get("/v1/registry/models", response_model=None)
 def list_model_profiles(req: Request) -> list[dict[str, Any]]:
     """Lists registered model capability profiles."""
-    registry: ModelRegistry = req.app.state.model_registry
+    registry: ModelRegistry = getattr(req.app.state, "model_registry")
     return [m.model_dump() for m in registry.list_models()]
