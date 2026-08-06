@@ -23,9 +23,9 @@ class RouteConstraints(BaseModel):
 class RouteRequest(BaseModel):
     """Ingress context route evaluation payload."""
 
-    tenant_id: str = Field(..., example="tenant-corp-alpha")
-    session_id: str = Field(..., example="sess-9923-bf34-9981")
-    agent_id: str | None = Field(default=None, example="agent-customer-support")
+    tenant_id: str = Field(...)
+    session_id: str = Field(...)
+    agent_id: str | None = Field(default=None)
     request_context: RequestContext
     constraints: RouteConstraints | None = None
 

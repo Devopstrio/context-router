@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class ModelProfile(BaseModel):
@@ -16,7 +16,7 @@ class ModelProfile(BaseModel):
     historical_p99_latency_ms: float
     supported_regions: list[str]
     is_active: bool = True
-    metadata: dict[str, Any] = {}
+    metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 class ModelRegistry:
