@@ -1,8 +1,11 @@
 """Security Middleware for Request Interception and Auth Enforcement."""
 
 import uuid
+from typing import Any
+
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
+
 from context_router.security.jwt_auth import JWTAuthenticator
 from context_router.security.tenant_guard import TenantIsolationGuard
 

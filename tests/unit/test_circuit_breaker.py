@@ -1,5 +1,7 @@
 """Unit tests for ResiliencyController and CircuitBreaker."""
 
+import time
+
 from context_router.resiliency.circuit_breaker import BreakerState, ResiliencyController
 
 
@@ -26,7 +28,6 @@ def test_circuit_breaker_recovery_to_half_open():
     resiliency.record_failure("model-b")
     assert resiliency.get_circuit_status("model-b") == BreakerState.OPEN
 
-    import time
     time.sleep(0.15)
 
     assert resiliency.get_circuit_status("model-b") == BreakerState.HALF_OPEN

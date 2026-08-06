@@ -2,6 +2,7 @@
 
 import time
 from typing import Any
+
 from fastapi import APIRouter, HTTPException, Request
 
 router = APIRouter(tags=["Health"])

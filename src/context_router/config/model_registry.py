@@ -1,6 +1,7 @@
 """Model Capability Profile Registry."""
 
 from typing import Any
+
 from pydantic import BaseModel
 
 
