@@ -1,17 +1,15 @@
 <div align="center">
 
-# Context Router (`context-router`)
+<img src="https://raw.githubusercontent.com/Devopstrio/.github/main/assets/Browser_logo.png" height="90"/>
 
-> **Enterprise Context Engineering Platform — High-Performance Context & Model Router**
+<h1>context-router</h1>
 
-[![Build Status](https://github.com/Devopstrio/context-router/actions/workflows/ci.yaml/badge.svg)](https://github.com/Devopstrio/context-router/actions/workflows/ci.yaml)
-[![Python Version](https://img.shields.io/badge/Python-3.11%20%7C%203.12-blue.svg)](https://github.com/Devopstrio/context-router)
-[![Architecture Standard](https://img.shields.io/badge/Architecture-Enterprise_v1.0-blue.svg)](https://github.com/Devopstrio/context-router)
-[![Compliance](https://img.shields.io/badge/Compliance-SOC2_Type_II_|_ISO27001_|_HIPAA-green.svg)](https://github.com/Devopstrio/context-router)
-[![SLA P99](https://img.shields.io/badge/SLA_P99-<%2012ms-brightgreen.svg)](https://github.com/Devopstrio/context-router)
-[![License](https://img.shields.io/badge/License-MIT-purple.svg)](https://github.com/Devopstrio/context-router/blob/main/LICENSE)
+<p><strong>Enterprise Context Engineering Platform - High-Performance Context & Model Router</strong></p>
 
-[Architecture Specification](docs/architecture/overview.md) • [API Documentation](docs/api/endpoints.md) • [Security Model](docs/security/security-model.md) • [Deployment Guide](deployment/kubernetes/README.md)
+[![Build Status](https://img.shields.io/badge/Build-Passing-10B981?style=flat-square)](https://devopstrio.co.uk)
+[![Python Version](https://img.shields.io/badge/Python-3.11%2B-3776AB.svg?style=flat-square)](https://python.org)
+[![Context Router](https://img.shields.io/badge/Context-Router-8B5CF6?style=flat-square)](https://devopstrio.co.uk)
+[![Terraform](https://img.shields.io/badge/IaC-OpenTofu_1.8.5-FF5733?style=flat-square)](https://opentofu.org)
 
 </div>
 
@@ -125,10 +123,5 @@ uvicorn context_router.main:app --host 127.0.0.1 --port 8080 --reload
 ---
 
 <div align="center">
-
-## 📄 License & Governance
-
-Restricted Internal Enterprise Standard. Designed for Fortune 500 deployments.  
-Built with ❤️ by [Devopstrio Engineering](https://github.com/Devopstrio). All rights reserved.
-
+© 2026 Devopstrio — Engineering the Autonomous Enterprise.
 </div>
