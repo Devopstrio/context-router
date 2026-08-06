@@ -1,6 +1,7 @@
 """RFC 7807 Problem Details Error Handlers."""
 
 import datetime
+from typing import Any
 
 from fastapi import Request
 from fastapi.exceptions import RequestValidationError
@@ -46,7 +47,7 @@ class DependencyTimeoutException(RouterBaseException):
 
 def build_problem_details(
     code: str, title: str, status: int, detail: str, instance: str
-) -> dict:
+) -> dict[str, Any]:
     """Constructs RFC 7807 compliant error dictionary."""
     return {
         "type": f"https://router.context.internal/errors/{code}",

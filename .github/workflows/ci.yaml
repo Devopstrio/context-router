@@ -26,7 +26,7 @@ jobs:
       - name: Lint with ruff
         run: ruff check .
       - name: Type check with mypy
-        run: mypy .
+        run: mypy src/
       - name: Security scan with bandit
         run: bandit -r src/ -ll -ii
       - name: Test with pytest
