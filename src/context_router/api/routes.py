@@ -6,7 +6,7 @@ from typing import Any, cast
 
 from fastapi import APIRouter, Header, HTTPException, Request
 
-from context_router.config.model_registry import ModelProfile
+from context_router.config.model_registry import ModelProfile, ModelRegistry
 from context_router.observability.metrics import (
     FALLBACK_TOTAL,
     LATENCY_SECONDS,
@@ -269,13 +269,13 @@ def register_model_profile(
     except SecurityBoundaryViolation as e:
         raise HTTPException(status_code=403, detail=f"ERR-4001: {e.message}") from e
 
-    registry: ModelProfile = req.app.state.model_registry
-    registry.register_model(profile)  # type: ignore
+    registry: ModelRegistry = req.app.state.model_registry
+    registry.register_model(profile)
     return profile
 
 
 @router.get("/v1/registry/models", response_model=None)
 def list_model_profiles(req: Request) -> list[dict[str, Any]]:
     """Lists registered model capability profiles."""
-    registry = req.app.state.model_registry
+    registry: ModelRegistry = req.app.state.model_registry
     return [m.model_dump() for m in registry.list_models()]
