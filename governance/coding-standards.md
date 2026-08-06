@@ -1,0 +1,1 @@
+Enterprise coding guidelines, linting rules, and documentation directives.

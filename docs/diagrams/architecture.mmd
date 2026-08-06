@@ -1,0 +1,33 @@
+graph TB
+    subgraph Ingress Layer
+        GW[Enterprise API Gateway]
+    end
+
+    subgraph context-router Core Plane
+        VAL[IngressValidator]
+        AUTH[TenantIsolationGuard]
+        MAT[RouteDecisionMatrix]
+        REG[ModelRegistry]
+        RES[ResiliencyController]
+        DISP[DispatchAdapter]
+    end
+
+    subgraph Platform Sibling Ecosystem
+        PE[policy-engine]
+        MM[memory-manager]
+        TBO[token-budget-optimizer]
+        CA[context-assembler]
+        AS[audit-service]
+    end
+
+    GW -->|REST HTTP/2| VAL
+    VAL --> AUTH
+    AUTH -->|Validate Rules| PE
+    AUTH --> MAT
+    MAT -->|Get History Pointer| MM
+    MAT -->|Calculate Mass| TBO
+    MAT --> REG
+    MAT --> RES
+    RES --> DISP
+    DISP -->|Submit Execution Plan| CA
+    DISP -.->|Kafka Event| AS

@@ -1,0 +1,18 @@
+flowchart TD
+    Start([Client Request]) --> SchemaCheck{Valid JSON Schema?}
+    SchemaCheck -->|No| Err400[Return 400 Bad Request]
+    SchemaCheck -->|Yes| AuthCheck{JWT & Tenant Valid?}
+    AuthCheck -->|No| Err403[Return 403 Forbidden]
+    AuthCheck -->|Yes| FetchMemory[Fetch History State from memory-manager]
+    FetchMemory --> CalcTokens[Calculate Payload & Context Tokens]
+    CalcTokens --> WindowCheck{Tokens <= Model Window?}
+    WindowCheck -->|No| Truncate[Request Truncation from token-budget-optimizer]
+    Truncate --> ScoreModels
+    WindowCheck -->|Yes| ScoreModels[Compute Model Scoring Matrix]
+    ScoreModels --> CheckHealth{Primary Target Healthy?}
+    CheckHealth -->|No| Failover[Select Secondary Target from Fallback Chain]
+    Failover --> BuildPlan
+    CheckHealth -->|Yes| BuildPlan[Construct Execution Plan]
+    BuildPlan --> Dispatch[Dispatch Plan to context-assembler]
+    Dispatch --> LogAudit[Emit Audit Telemetry Event]
+    LogAudit --> End([Return 200 OK Response])

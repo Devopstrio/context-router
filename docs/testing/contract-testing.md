@@ -1,0 +1,1 @@
+Pact contract verification tests ensuring inter-service schema alignment.

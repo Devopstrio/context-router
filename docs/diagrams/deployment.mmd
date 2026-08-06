@@ -1,0 +1,14 @@
+graph TB
+    subgraph Multi-Cloud K8s Deployment
+        subgraph Region: us-east-1
+            ALB1[AWS ALB / Ingress] --> Pod1[Router Pod A]
+            ALB1 --> Pod2[Router Pod B]
+            Pod1 --> L1A[In-Memory L1 Cache]
+            Pod1 --> Redis1[(Redis Cluster L2)]
+        end
+        subgraph Region: eu-west-1
+            ALB2[AWS ALB / Ingress] --> Pod3[Router Pod C]
+            Pod3 --> L1B[In-Memory L1 Cache]
+            Pod3 --> Redis2[(Redis Cluster L2)]
+        end
+    end

@@ -1,0 +1,1 @@
+Role-Based Access Control matrix defining API operation permissions.

@@ -1,0 +1,17 @@
+componentDiagram
+    package "context-router Microservice" {
+        [Ingress Controller] --> [Validation Engine]
+        [Validation Engine] --> [Tenant Isolation Guard]
+        [Tenant Isolation Guard] --> [Routing Engine]
+        [Routing Engine] --> [Model Capability Matrix]
+        [Routing Engine] --> [Resiliency & Circuit Breaker]
+        [Resiliency & Circuit Breaker] --> [Dispatch Engine]
+    }
+    database "L1 Cache" {
+        [Local Memory]
+    }
+    database "L2 Cache" {
+        [Redis Cluster]
+    }
+    [Routing Engine] ..> [Local Memory] : Read Policy
+    [Routing Engine] ..> [Redis Cluster] : Read Session

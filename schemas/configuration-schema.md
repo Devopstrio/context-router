@@ -1,0 +1,1 @@
+JSON Schema for validating application YAML configuration files.

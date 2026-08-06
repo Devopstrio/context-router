@@ -1,0 +1,1 @@
+Git branching strategies, commit standards (Conventional Commits), and CI/CD policy.

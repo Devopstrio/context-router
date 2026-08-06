@@ -1,0 +1,1 @@
+Key namespace formatting standards (`tenant:{id}:session:{id}`).

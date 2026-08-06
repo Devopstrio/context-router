@@ -1,0 +1,1 @@
+Detailed specification of JWT claims validation, JWKS rotation, and expiration enforcement.

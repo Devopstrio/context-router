@@ -1,0 +1,1 @@
+Specification for model capabilities manifest files.

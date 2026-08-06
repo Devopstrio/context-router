@@ -1,0 +1,1 @@
+Redis L2 cache topology, cluster sharding, and failover parameters.

@@ -1,0 +1,1 @@
+Detailed compliance controls mapping to SOC2 Type II, ISO27001, GDPR, and HIPAA.

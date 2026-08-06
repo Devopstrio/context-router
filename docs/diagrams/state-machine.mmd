@@ -1,0 +1,11 @@
+stateDiagram-v2
+    [*] --> RECEIVED
+    RECEIVED --> VALIDATED : Schema Pass
+    VALIDATED --> AUTHENTICATED : Auth Pass
+    AUTHENTICATED --> SESSION_RESOLVED : Memory Fetched
+    SESSION_RESOLVED --> ROUTE_EVALUATED : Matrix Executed
+    ROUTE_EVALUATED --> FAILED_OVER : Target Breaker Open
+    FAILED_OVER --> ROUTE_DISPATCHED : Backup Target Assigned
+    ROUTE_EVALUATED --> ROUTE_DISPATCHED : Target Healthy
+    ROUTE_DISPATCHED --> AUDITED : Kafka ACK
+    AUDITED --> [*]

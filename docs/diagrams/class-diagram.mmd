@@ -1,0 +1,24 @@
+classDiagram
+    class IngressValidator {
+        +validatePayload(json) SchemaResult
+    }
+    class TenantIsolationGuard {
+        +verifyBoundary(tenantId, jwt) AuthResult
+    }
+    class RouteDecisionMatrix {
+        +evaluateRoute(context, policies) RouteSpec
+        -scoreModel(modelSpec) float
+    }
+    class ModelRegistry {
+        +getEligibleModels(tokens) ModelList
+        +updateHealthStatus(modelId, status)
+    }
+    class ResiliencyController {
+        +getCircuitStatus(modelId) BreakerState
+        +tripCircuit(modelId)
+    }
+    
+    IngressValidator --> TenantIsolationGuard
+    TenantIsolationGuard --> RouteDecisionMatrix
+    RouteDecisionMatrix --> ModelRegistry
+    RouteDecisionMatrix --> ResiliencyController

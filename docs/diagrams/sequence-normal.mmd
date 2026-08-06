@@ -1,0 +1,20 @@
+sequenceDiagram
+    autonumber
+    actor Client
+    participant Router as context-router
+    participant Policy as policy-engine
+    participant Memory as memory-manager
+    participant TokenOpt as token-budget-optimizer
+    participant Assembler as context-assembler
+
+    Client->>Router: POST /v1/context/route
+    Router->>Policy: EvaluateTenantAccess(TenantID)
+    Policy-->>Router: Access Allowed (Rules ACK)
+    Router->>Memory: GetSessionStatePointer(SessionID)
+    Memory-->>Router: Session Active (Pointer Data)
+    Router->>TokenOpt: EstimateMass(Payload + State)
+    TokenOpt-->>Router: Token Count = 14,200
+    Router->>Router: Execute Route Decision Algorithm
+    Router->>Assembler: SubmitRoutePlan(PlanSpec)
+    Assembler-->>Router: Plan Accepted (JobID)
+    Router-->>Client: 200 OK (RoutePlanResult)

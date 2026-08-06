@@ -1,0 +1,1 @@
+Integration specification with AWS KMS / HashiCorp Vault for key rotation.

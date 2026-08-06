@@ -1,0 +1,1 @@
+Apache Avro / JSON Schema definitions for Kafka audit events.

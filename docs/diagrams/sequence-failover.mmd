@@ -1,0 +1,19 @@
+sequenceDiagram
+    autonumber
+    actor Client
+    participant Router as context-router
+    participant Primary as Primary Provider (Azure OpenAI)
+    participant Secondary as Backup Provider (AWS Bedrock)
+    participant Assembler as context-assembler
+
+    Client->>Router: POST /v1/context/route
+    Router->>Router: Decision: Target = Azure OpenAI
+    Router->>Primary: Ping / Health Diagnostic
+    Primary-->>Router: 503 Service Unavailable / HTTP 429 Rate Limit
+    Router->>Router: Circuit Breaker TRIPPED for Primary
+    Router->>Router: Trigger Failover Heuristic -> Select AWS Bedrock
+    Router->>Secondary: Health Diagnostic Check
+    Secondary-->>Router: 200 OK (Healthy)
+    Router->>Assembler: SubmitRoutePlan(Target = AWS Bedrock)
+    Assembler-->>Router: Job Accepted
+    Router-->>Client: 200 OK (RoutePlanResult with Failover Flag)

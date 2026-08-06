@@ -1,0 +1,1 @@
+Structured JSON logging standards adhering to ECS (Elastic Common Schema).

@@ -1,0 +1,1 @@
+Mock harness integration test suites for testing sibling repository protocols.
