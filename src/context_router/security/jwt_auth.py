@@ -42,6 +42,7 @@ class JWTAuthenticator:
                 token,
                 self.secret_key,
                 algorithms=[self.algorithm],
+                audience=self.audience,
                 options={"verify_signature": True, "verify_exp": True},
             )
             return JWTClaims(
