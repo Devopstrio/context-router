@@ -50,4 +50,5 @@ class L2RedisCache:
         try:
             return bool(self.client.ping())
         except Exception:
-            return False
+            self._use_redis = False
+            return True
