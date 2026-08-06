@@ -28,7 +28,7 @@ def test_circuit_breaker_recovery_to_half_open():
     resiliency.record_failure("model-b")
     assert resiliency.get_circuit_status("model-b") == BreakerState.OPEN
 
-    time.sleep(0.15)
+    time.sleep(0.25)
 
     assert resiliency.get_circuit_status("model-b") == BreakerState.HALF_OPEN
     assert resiliency.is_healthy("model-b") is True

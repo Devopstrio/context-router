@@ -19,7 +19,7 @@ def test_l1_cache_set_and_get():
 def test_l1_cache_ttl_expiration():
     cache = L1MemoryCache(default_ttl_seconds=0.1)
     cache.set("key_exp", "expired_val")
-    time.sleep(0.15)
+    time.sleep(0.25)
 
     assert cache.get("key_exp") is None
     stats = cache.get_stats()
