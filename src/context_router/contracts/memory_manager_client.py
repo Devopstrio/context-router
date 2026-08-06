@@ -1,7 +1,5 @@
 """Contract Client for memory-manager Sibling Service."""
 
-from typing import Any
-
 
 class MemoryStatePointer:
     def __init__(

@@ -1,6 +1,5 @@
 """Route Decision Matrix with Mathematical Scoring Equation."""
 
-from typing import Any
 from context_router.config.model_registry import ModelProfile, ModelRegistry
 from context_router.config.settings import ContextRouterSettings
 from context_router.validation.schemas import RouteRequest

@@ -1,6 +1,5 @@
 """OpenTelemetry Tracing Setup and Hooks."""
 
-from typing import Any
 from opentelemetry import trace
 from opentelemetry.trace import Tracer
 

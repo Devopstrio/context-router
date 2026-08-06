@@ -1,6 +1,6 @@
 """OpenAPI 3.1 Pydantic Validation Schemas."""
 
-from typing import Any, Literal
+from typing import Literal
 from pydantic import BaseModel, Field
 
 

@@ -1,8 +1,7 @@
 """Unit tests for RouteDecisionMatrix mathematical scoring equation."""
 
 import pytest
-from context_router.config.model_registry import ModelProfile, ModelRegistry
-from context_router.config.settings import ContextRouterSettings
+from context_router.config.model_registry import ModelProfile
 from context_router.routing.matrix import RouteDecisionMatrix
 from context_router.validation.schemas import RequestContext, RouteRequest
 
