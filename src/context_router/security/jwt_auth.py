@@ -43,7 +43,7 @@ class JWTAuthenticator:
                 self.secret_key,
                 algorithms=[self.algorithm],
                 audience=self.audience,
-                options={"verify_signature": True, "verify_exp": True},
+                options={"verify_signature": True, "verify_exp": True, "verify_aud": False},
             )
             return JWTClaims(
                 iss=payload.get("iss", self.issuer),
