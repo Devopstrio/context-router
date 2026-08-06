@@ -32,7 +32,10 @@ def authenticator(settings: ContextRouterSettings) -> JWTAuthenticator:
 
 @pytest.fixture
 def valid_token(authenticator: JWTAuthenticator) -> str:
-    return authenticator.generate_test_token(tenant_id="tenant-corp-alpha")
+    return authenticator.generate_test_token(
+        tenant_id="tenant-corp-alpha",
+        roles=["context:route", "session:read"],
+    )
 
 
 @pytest.fixture
