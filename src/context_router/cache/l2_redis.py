@@ -7,7 +7,7 @@ import redis
 
 
 class L2RedisCache:
-    """L2 Distributed Redis Cache for Session & Policy Pointers."""
+    """L2 Distributed Redis Cache for Session & Policy Pointers with In-Memory Fallback."""
 
     def __init__(self, redis_url: str = "redis://localhost:6379/0") -> None:
         self.redis_url = redis_url
@@ -23,26 +23,32 @@ class L2RedisCache:
         return f"ctx_router:{namespace}:{tenant_id}:{identifier}"
 
     def get_json(self, key: str) -> dict[str, Any] | None:
-        try:
-            if self._use_redis:
+        if self._use_redis:
+            try:
                 data = self.client.get(key)
                 if data and isinstance(data, str):
                     return json.loads(data)
-            elif key in self._fallback_store:
+                return None
+            except Exception:
+                self._use_redis = False
+
+        if key in self._fallback_store:
+            try:
                 return json.loads(self._fallback_store[key])
-        except Exception:
-            pass
+            except Exception:
+                pass
         return None
 
     def set_json(self, key: str, value: dict[str, Any], ttl_seconds: int = 300) -> None:
-        try:
-            serialized = json.dumps(value)
-            if self._use_redis:
+        serialized = json.dumps(value)
+        if self._use_redis:
+            try:
                 self.client.setex(key, ttl_seconds, serialized)
-            else:
-                self._fallback_store[key] = serialized
-        except Exception:
-            pass
+                return
+            except Exception:
+                self._use_redis = False
+
+        self._fallback_store[key] = serialized
 
     def ping(self) -> bool:
         if not self._use_redis:
